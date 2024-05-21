@@ -7,7 +7,7 @@
 Generate types for your Cloudflare bindings in `wrangler.toml`:
 
 ```sh
-npm run typegen
+pnpm typegen
 ```
 
 You will need to rerun typegen whenever you make changes to `wrangler.toml`.
@@ -24,25 +24,15 @@ To run Wrangler:
 
 ```sh
 npm run build
-npm run start
+npm start
 ```
 
 ## Deployment
 
-> [!WARNING]  
-> Cloudflare does _not_ use `wrangler.toml` to configure deployment bindings.
-> You **MUST** [configure deployment bindings manually in the Cloudflare dashboard][bindings].
+If you don't already have an account, then [create a cloudflare account here](https://dash.cloudflare.com/sign-up) and after verifying your email address with Cloudflare, go to your dashboard and set up your free custom Cloudflare Workers subdomain.
 
-First, build your app for production:
+Once that's done, you should be able to deploy your app:
 
 ```sh
-npm run build
+pnpm run deploy
 ```
-
-Then, deploy your app to Cloudflare Pages:
-
-```sh
-npm run deploy
-```
-
-[bindings]: https://developers.cloudflare.com/pages/functions/bindings/

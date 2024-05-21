@@ -29,10 +29,10 @@ export async function AskQuestion(request: Request, env: Env) {
         const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
         const word = await KV.get("todays-word");
-        const prompt = `${question} ${word}? Answer only using yes or no.`;
+        const prompt = `20 questions, the word is "${word}". The question is: "${question}" ? Answer only using yes or no.`;
         const result = await model.generateContent(prompt);
         const response = result.response;
-        const text = response.text();
+        const text = response.text().trim().toLowerCase();
         return new Response(text);
     } catch (error) {
         console.error(error);
