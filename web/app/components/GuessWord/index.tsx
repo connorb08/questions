@@ -6,13 +6,13 @@ import { GameData } from "~/utils/types";
 export default function GuessWord(
     props: PropsWithChildren<{
         gameState: GameData;
-        setGameState: (game: GameData) => void;
+        setGameState: React.Dispatch<React.SetStateAction<GameData>>;
     }>
 ) {
     const fetcher = useFetcher();
     const [open, setOpen] = useState(false);
     const [guess, setGuess] = useState("");
-    const [error, setError] = useState("");
+    const [_error, setError] = useState("");
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -30,15 +30,20 @@ export default function GuessWord(
 
     useEffect(() => {
         if (fetcher.state === "idle" && fetcher.data) {
-            // @ts-expect-error: data is a string
-            const data = JSON.parse(fetcher.data);
-            props.setGameState({
-                gameOver: true,
-                won: data.correct,
-                questions: props.gameState.questions,
-            });
+            try {
+                // @ts-expect-error: data is a string
+                const data = JSON.parse(fetcher.data);
+                props.setGameState({
+                    gameOver: true,
+                    won: data.correct,
+                    questions: props.gameState.questions,
+                });
+            } catch (error) {
+                console.error(error);
+                setError("Error submitting guess");
+            }
         }
-    }, [fetcher.state, fetcher.data, props]);
+    }, [fetcher.state, fetcher.data]);
 
     return (
         <>

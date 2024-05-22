@@ -1,4 +1,4 @@
-name = "questions"
+name = "questions-web"
 
 main = "./server.js"
 workers_dev = true
@@ -7,7 +7,9 @@ compatibility_date = "2023-04-20"
 
 kv_namespaces = [{ binding = "KV", id = "c34461be11934c728953e25ae619220e" }]
 
-services = [{ binding = "QUESTIONS", service = "questions" }]
+services = [{ binding = "QUESTIONS", service = "questions-api" }]
+
+route = { pattern = "questions.connorbray.net", custom_domain = true }
 
 [site]
 bucket = "./build/client"

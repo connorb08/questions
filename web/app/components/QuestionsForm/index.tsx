@@ -4,10 +4,12 @@ import { useFetcher } from "@remix-run/react";
 import { GameData } from "~/utils/types";
 
 export default function QuestionsForm(
-    props: PropsWithChildren<{ gameState: GameData }>
+    props: PropsWithChildren<{
+        gameState: GameData;
+        setGameState: React.Dispatch<React.SetStateAction<GameData>>;
+    }>
 ) {
     const fetcher = useFetcher();
-    const [questiions, setQuestions] = useState(props.gameState.questions);
     const [currentQuestion, setCurrentQuestion] = useState("");
     const [error, setError] = useState("");
 
@@ -19,6 +21,7 @@ export default function QuestionsForm(
                 encType: "application/json",
                 action: "/api/ask",
             });
+            setCurrentQuestion("");
         } else {
             setError("Question cannot be empty");
         }
@@ -28,20 +31,25 @@ export default function QuestionsForm(
         if (fetcher.state === "idle" && fetcher.data) {
             // @ts-expect-error: data is a string
             const data = JSON.parse(fetcher.data);
-            setQuestions((questions) => [
-                ...questions,
-                {
-                    question: data.question,
-                    answer: data.answer,
-                },
-            ]);
+            props.setGameState((game_state) => {
+                return {
+                    ...game_state,
+                    questions: [
+                        ...game_state.questions,
+                        {
+                            question: data.question,
+                            answer: data.answer,
+                        },
+                    ],
+                };
+            });
         }
     }, [fetcher.state, fetcher.data]);
 
     return (
         <div>
             <ul className={style.AskedQuestions}>
-                {questiions.map((question, index) => (
+                {props.gameState.questions.map((question, index) => (
                     <li
                         key={index}
                         className={

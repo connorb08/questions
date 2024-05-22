@@ -1,10 +1,10 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "questions"
+name = "questions-api"
 main = "src/index.ts"
 compatibility_date = "2024-05-12"
 compatibility_flags = ["nodejs_compat"]
 
-route = { pattern = "questions.connorbray.net", custom_domain = true }
+route = { pattern = "questionsapi.connorbray.net", custom_domain = true }
 
 [[kv_namespaces]]
 binding = "KV"

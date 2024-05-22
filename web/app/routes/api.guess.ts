@@ -5,11 +5,18 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
     const method = request.method;
     const KV = context.cloudflare.env.KV;
-    const word = await KV.get("word");
-    // const word = "rainbow"
+    let word = await KV.get("todays-word");
+
+    if (process.env.NODE_ENV === "development" && word === null) {
+        word = "cactus";
+    }
 
     if (!word) {
-        return new Response("Word not found", { status: 404 });
+        console.error("word not found");
+        return new Response(JSON.stringify({
+            error: "Word not found",
+            correct: null
+        }), { status: 500 });
     }
     if (method !== "POST") {
         return new Response("Method Not Allowed", { status: 405 });

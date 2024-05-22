@@ -5,7 +5,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
     try {
         const method = request.method;
         // Questions worker binding
-        // const QUESTIONS = context.cloudflare.env.QUESTIONS;
+        const QUESTIONS = context.cloudflare.env.QUESTIONS;
         if (method !== "POST") {
             return new Response("Method Not Allowed", { status: 405 });
         }
@@ -19,17 +19,16 @@ export async function action({ request, context }: ActionFunctionArgs) {
         d.setHours(24, 0, 0, 0);
 
         // Get response from API
-        const res = await fetch("https://questions.connorbray.net/ask", {
+        const res = await QUESTIONS.fetch("https://questionsapi.connorbray.net/ask", {
             method: "POST",
             body: JSON.stringify({ question: data.question }),
         });
         const res_data = await res.text();
-        const answer = res_data.replaceAll(".", "").trim().toLowerCase() === "yes"
+        console.log(res_data);
+        const answer = res_data.replaceAll(".", "").trim().toLowerCase() === "yes";
 
         // Set cookie data
-        session.set("questions", [...questions, { question: data.question, answer }])
-
-        console.log(session)
+        session.set("questions", [...questions, { question: data.question, answer }]);
 
         // Send response
         return new Response(JSON.stringify({

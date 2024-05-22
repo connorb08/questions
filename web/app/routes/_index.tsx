@@ -8,7 +8,7 @@ import { useState } from "react";
 import GuessWord from "~/components/GuessWord";
 import Header from "~/components/Header";
 import QuestionsForm from "~/components/QuestionsForm";
-import ShareResult from "~/components/ShareResult";
+import GameResult from "~/components/GameResult";
 import { commitSession, getSession } from "~/utils/session";
 import { GameData } from "~/utils/types";
 
@@ -42,7 +42,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Index() {
     const gameData = useLoaderData<typeof loader>() as GameData;
     const [gameState, setGameState] = useState<GameData>(gameData);
-    console.log(gameState);
 
     return (
         <div
@@ -62,9 +61,16 @@ export default function Index() {
                     margin: "auto",
                 }}
             >
-                <QuestionsForm gameState={gameState} />
+                <QuestionsForm
+                    gameState={gameState}
+                    setGameState={setGameState}
+                />
                 <GuessWord gameState={gameState} setGameState={setGameState} />
-                {gameState.gameOver ? <ShareResult /> : null}
+                {gameState.gameOver ? (
+                    <>
+                        <GameResult gameState={gameState} />
+                    </>
+                ) : null}
             </div>
         </div>
     );
